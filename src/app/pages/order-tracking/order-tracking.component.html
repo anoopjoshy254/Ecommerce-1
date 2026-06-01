@@ -1,0 +1,39 @@
+<div class="page-container"><app-navbar></app-navbar><app-loader></app-loader>
+  <div class="page-content">
+    <div class="page-header">
+      <a routerLink="/orders" class="back-link"><i class="bi bi-arrow-left"></i> Back to Orders</a>
+      <h2 class="page-title">Track Order #{{ trackData?.id }}</h2>
+    </div>
+    @if (!loading && trackData) {
+      <div class="tracking-card">
+        @if (isCancelled()) {
+          <div class="cancelled-banner"><i class="bi bi-x-circle-fill"></i> This order has been cancelled.</div>
+        }
+        <!-- Timeline -->
+        @if (!isCancelled()) {
+          <div class="timeline">
+            @for (status of statuses; track status) {
+              <div class="timeline-step" [class.completed]="isCompleted(status)" [class.current]="isCurrent(status)">
+                <div class="step-icon"><i class="bi" [class]="getStatusIcon(status)"></i></div>
+                <div class="step-content">
+                  <div class="step-title">{{ status }}</div>
+                  @if (isCurrent(status)) { <div class="step-date">{{ formatDate(trackData.orderDate) }}</div> }
+                </div>
+                @if (!$last) { <div class="step-connector" [class.filled]="isCompleted(statuses[$index + 1])"></div> }
+              </div>
+            }
+          </div>
+        }
+        <div class="tracking-info">
+          <div class="info-item"><span class="info-label">Order ID</span><span>#{{ trackData.id }}</span></div>
+          <div class="info-item"><span class="info-label">Status</span><span class="status-badge" [class]="'status-' + trackData.orderStatus.toLowerCase()">{{ trackData.orderStatus }}</span></div>
+          <div class="info-item"><span class="info-label">Order Date</span><span>{{ formatDate(trackData.orderDate) }}</span></div>
+        </div>
+      </div>
+    }
+    @if (!loading && !trackData) {
+      <div class="empty-state"><i class="bi bi-geo-alt"></i><h4>Order not found</h4></div>
+    }
+  </div>
+  <app-footer></app-footer>
+</div>

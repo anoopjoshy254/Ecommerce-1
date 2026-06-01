@@ -1,0 +1,119 @@
+<nav class="navbar-wrapper">
+  <div class="navbar-inner">
+
+    <!-- Logo -->
+    <a routerLink="/home" class="navbar-logo">
+      <span class="logo-text">Shop<span class="logo-accent">Mart</span></span>
+    </a>
+
+    <!-- Search Bar -->
+    <div class="navbar-search">
+      <input
+        id="navbar-search-input"
+        type="text"
+        class="search-input"
+        placeholder="Search for products, brands and more"
+        [(ngModel)]="searchQuery"
+        (keydown)="onSearchKeydown($event)"
+      />
+      <button class="search-btn" (click)="onSearch()">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+
+    <!-- Nav Actions -->
+    <div class="navbar-actions">
+      <!-- Home Link -->
+      <a routerLink="/home" id="navbar-home-btn" class="nav-btn">
+        <i class="bi bi-house-door"></i>
+        <span>Home</span>
+      </a>
+
+      @if (!auth.isLoggedIn()) {
+        <!-- Login Button -->
+        <a routerLink="/login" id="navbar-login-btn" class="nav-btn">
+          <i class="bi bi-person-circle"></i>
+          <span>Login</span>
+        </a>
+      } @else {
+        <!-- User Menu -->
+        <div class="user-menu-wrapper" (clickOutside)="closeMenu()">
+          <button id="navbar-user-menu-btn" class="nav-btn user-trigger" (click)="toggleUserMenu()">
+            <div class="user-avatar">{{ auth.currentUser()?.name?.charAt(0)?.toUpperCase() }}</div>
+            <span>{{ (auth.currentUser()?.name || '').split(' ')[0] }}</span>
+            <i class="bi bi-chevron-down small-icon"></i>
+          </button>
+
+          @if (showUserMenu) {
+            <div class="user-dropdown" (click)="closeMenu()">
+              <div class="dropdown-header">
+                <div class="dropdown-avatar">{{ auth.currentUser()?.name?.charAt(0)?.toUpperCase() }}</div>
+                <div>
+                  <div class="dropdown-name">{{ auth.currentUser()?.name }}</div>
+                  <div class="dropdown-email">{{ auth.currentUser()?.email }}</div>
+                  <span class="role-badge" [class.seller-badge]="auth.isSeller()">
+                    {{ auth.isSeller() ? 'Seller' : 'Buyer' }}
+                  </span>
+                </div>
+              </div>
+              <div class="dropdown-divider"></div>
+
+              @if (!auth.isSeller()) {
+                <a routerLink="/profile" class="dropdown-item">
+                  <i class="bi bi-person"></i> My Profile
+                </a>
+                <a routerLink="/orders" class="dropdown-item">
+                  <i class="bi bi-box-seam"></i> My Orders
+                </a>
+                <a routerLink="/wishlist" class="dropdown-item">
+                  <i class="bi bi-heart"></i> Wishlist
+                </a>
+              }
+
+              @if (auth.isSeller()) {
+                <a routerLink="/seller/dashboard" class="dropdown-item">
+                  <i class="bi bi-grid-3x3-gap"></i> Dashboard
+                </a>
+                <a routerLink="/seller/products" class="dropdown-item">
+                  <i class="bi bi-box-seam"></i> My Products
+                </a>
+                <a routerLink="/seller/orders" class="dropdown-item">
+                  <i class="bi bi-receipt"></i> Orders
+                </a>
+                <a routerLink="/seller/analytics" class="dropdown-item">
+                  <i class="bi bi-bar-chart"></i> Analytics
+                </a>
+              }
+
+              <div class="dropdown-divider"></div>
+              <button id="navbar-logout-btn" class="dropdown-item logout-item" (click)="logout()">
+                <i class="bi bi-box-arrow-right"></i> Logout
+              </button>
+            </div>
+          }
+        </div>
+
+        <!-- Cart (only for Buyers) -->
+        @if (!auth.isSeller()) {
+          <a routerLink="/cart" id="navbar-cart-btn" class="nav-btn icon-btn">
+            <div class="icon-wrapper">
+              <i class="bi bi-cart3"></i>
+              @if (cart.cartCount() > 0) {
+                <span class="badge-count">{{ cart.cartCount() }}</span>
+              }
+            </div>
+            <span>Cart</span>
+          </a>
+        }
+      }
+
+      <!-- Seller Dashboard Link -->
+      @if (auth.isSeller()) {
+        <a routerLink="/seller/dashboard" class="nav-btn">
+          <i class="bi bi-grid-3x3-gap"></i>
+          <span>Dashboard</span>
+        </a>
+      }
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,20 @@
+<div class="page-container"><app-navbar></app-navbar>
+  <div class="page-content">
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="avatar">{{ getInitial() }}</div>
+        <div class="profile-info">
+          <h3 class="profile-name">{{ user?.name }}</h3>
+          <p class="profile-email">{{ user?.email }}</p>
+          <span class="role-chip" [class.seller]="user?.role === 'Seller'">{{ user?.role }}</span>
+        </div>
+      </div>
+      <div class="profile-links">
+        <a routerLink="/orders" class="profile-link"><i class="bi bi-box-seam"></i><div><strong>My Orders</strong><span>Track, return or buy things again</span></div><i class="bi bi-chevron-right"></i></a>
+        <a routerLink="/wishlist" class="profile-link"><i class="bi bi-heart"></i><div><strong>My Wishlist</strong><span>All your saved items</span></div><i class="bi bi-chevron-right"></i></a>
+        <a routerLink="/cart" class="profile-link"><i class="bi bi-cart3"></i><div><strong>My Cart</strong><span>View your cart</span></div><i class="bi bi-chevron-right"></i></a>
+      </div>
+    </div>
+  </div>
+  <app-footer></app-footer>
+</div>

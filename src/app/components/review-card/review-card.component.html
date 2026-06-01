@@ -1,0 +1,13 @@
+<div class="review-card">
+  <div class="review-header">
+    <div class="review-avatar">{{ getInitial() }}</div>
+    <div class="review-meta">
+      <span class="reviewer-name">{{ review.user }}</span>
+      <div class="review-rating-row">
+        <app-star-rating [rating]="review.rating" [readonly]="true" size="sm"></app-star-rating>
+        <span class="review-date">{{ formatDate(review.createdAt) }}</span>
+      </div>
+    </div>
+  </div>
+  <p class="review-comment">{{ review.comment }}</p>
+</div>

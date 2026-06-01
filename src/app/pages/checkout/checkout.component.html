@@ -1,0 +1,136 @@
+<div class="page-container">
+  <app-navbar></app-navbar>
+  <app-loader></app-loader>
+  <div class="page-content">
+    <h2 class="page-title">Checkout</h2>
+    <div class="checkout-layout">
+      <!-- Left: Address + Payment -->
+      <div class="checkout-main">
+        <!-- Delivery Address -->
+        <div class="checkout-card">
+          <h5 class="card-section-title"><i class="bi bi-geo-alt-fill"></i> Delivery Address</h5>
+          @if (savedAddress) {
+            <div class="mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="addressType" id="saved" [checked]="useSavedAddress" (change)="useSavedAddress = true">
+                <label class="form-check-label fw-bold" for="saved">
+                  Use Saved Address
+                </label>
+              </div>
+              @if (useSavedAddress) {
+                <div class="saved-address-card mt-2 p-3 border rounded bg-light">
+                  <strong>{{ savedAddress.name }}</strong><br>
+                  {{ savedAddress.address }}, {{ savedAddress.city }}, {{ savedAddress.state }} - {{ savedAddress.pincode }}<br>
+                  Phone: {{ savedAddress.phone }}
+                </div>
+              }
+            </div>
+        
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="radio" name="addressType" id="new" [checked]="!useSavedAddress" (change)="useSavedAddress = false">
+              <label class="form-check-label fw-bold" for="new">
+                Add New Address
+              </label>
+            </div>
+          }
+          
+          @if (!savedAddress || !useSavedAddress) {
+            <form [formGroup]="form">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Full Name *</label>
+                  <input type="text" class="form-control" formControlName="name" placeholder="Your full name" />
+                  @if (form.get('name')?.invalid && form.get('name')?.touched) { <small class="text-danger">Name is required</small> }
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Phone Number *</label>
+                  <input type="tel" class="form-control" formControlName="phone" placeholder="10-digit number" />
+                  @if (form.get('phone')?.invalid && form.get('phone')?.touched) { <small class="text-danger">Enter valid 10-digit number</small> }
+                </div>
+                <div class="col-12">
+                  <label class="form-label">Address *</label>
+                  <textarea class="form-control" formControlName="address" rows="2" placeholder="House/Flat No., Street, Area"></textarea>
+                  @if (form.get('address')?.invalid && form.get('address')?.touched) { <small class="text-danger">Address is required</small> }
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">City *</label>
+                  <input type="text" class="form-control" formControlName="city" placeholder="City" [class.is-invalid]="form.get('city')?.invalid && form.get('city')?.touched" />
+                  @if (form.get('city')?.invalid && form.get('city')?.touched) { <small class="text-danger d-block mt-1">City is required</small> }
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">State *</label>
+                  <input type="text" class="form-control" formControlName="state" placeholder="State" [class.is-invalid]="form.get('state')?.invalid && form.get('state')?.touched" />
+                  @if (form.get('state')?.invalid && form.get('state')?.touched) { <small class="text-danger d-block mt-1">State is required</small> }
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">Pincode *</label>
+                  <input type="text" class="form-control" formControlName="pincode" placeholder="6-digit pincode" [class.is-invalid]="form.get('pincode')?.invalid && form.get('pincode')?.touched" />
+                  @if (form.get('pincode')?.invalid && form.get('pincode')?.touched) { <small class="text-danger d-block mt-1">Enter a valid 6-digit Pincode</small> }
+                </div>
+              </div>
+            </form>
+          }
+        </div>
+
+        <!-- Payment Method -->
+        <div class="checkout-card">
+          <h5 class="card-section-title"><i class="bi bi-credit-card-fill"></i> Payment Method</h5>
+          <div class="payment-methods">
+            @for (method of paymentMethods; track method) {
+              <div class="payment-option" [class.selected]="selectedPayment === method" (click)="selectedPayment = method">
+                <div class="radio-circle" [class.active]="selectedPayment === method"></div>
+                <i class="bi" [ngClass]="{
+                  'bi-phone': method === 'UPI',
+                  'bi-credit-card-2-front': method === 'Credit Card',
+                  'bi-credit-card': method === 'Debit Card',
+                  'bi-bank': method === 'Net Banking'
+                }"></i>
+                <span>{{ method }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Order Summary -->
+      <div class="checkout-summary">
+        <div class="summary-card">
+          <h6 class="summary-title">ORDER SUMMARY</h6>
+          @if (cart) {
+            @for (item of cart.items; track item.cartItemId) {
+              <div class="order-item">
+                <span class="item-name">{{ item.productName }}</span>
+                <span class="item-qty">x{{ item.quantity }}</span>
+                <span class="item-price">₹{{ item.subTotal | number:'1.0-0' }}</span>
+              </div>
+            }
+          }
+          <div class="summary-divider"></div>
+          <div class="summary-row"><span>Subtotal</span><span>₹{{ cart?.totalAmount | number:'1.0-0' }}</span></div>
+          @if (discount > 0) { <div class="summary-row text-success"><span>Coupon Discount</span><span>-₹{{ discount | number:'1.0-0' }}</span></div> }
+          <div class="summary-row"><span>Delivery</span><span class="text-success">FREE</span></div>
+          <div class="summary-divider"></div>
+          <div class="summary-total"><span>Total</span><span>₹{{ finalAmount | number:'1.0-0' }}</span></div>
+
+          <!-- Coupon -->
+          @if (!couponApplied) {
+            <div class="coupon-row mt-3">
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="couponCode" placeholder="Coupon code" />
+              <button class="btn btn-outline-primary btn-sm" (click)="applyCoupon()">Apply</button>
+            </div>
+          } @else {
+            <div class="coupon-badge">
+              <i class="bi bi-tag-fill"></i> {{ couponCode }} applied! Saved ₹{{ discount }}
+            </div>
+          }
+
+          <button class="btn-place-order" (click)="placeOrder()" [disabled]="placing">
+            @if (placing) { <span class="spinner-border spinner-border-sm me-2"></span> }
+            {{ placing ? 'Placing Order...' : 'Place Order' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-footer></app-footer>
+</div>

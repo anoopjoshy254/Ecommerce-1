@@ -1,0 +1,27 @@
+<div class="page-container">
+  <app-navbar></app-navbar>
+  <app-loader></app-loader>
+  <app-confirmation-dialog title="Remove from Wishlist" message="Remove this item from your wishlist?" confirmLabel="Remove" [isVisible]="removeDialogVisible" (confirmed)="doRemove()" (cancelled)="removeDialogVisible = false"></app-confirmation-dialog>
+  <div class="page-content">
+    <h2 class="page-title"><i class="bi bi-heart-fill text-danger"></i> My Wishlist <span class="count-badge">{{ wishlistItems.length }}</span></h2>
+    @if (!loading && wishlistItems.length > 0) {
+      <div class="wishlist-grid">
+        @for (item of wishlistItems; track item.wishlistId) {
+          <div class="wishlist-card">
+            <button class="remove-wishlist-btn" (click)="confirmRemove(item)"><i class="bi bi-x-lg"></i></button>
+            <app-product-card [product]="toProduct(item)" [isWishlisted]="true" (addToCart)="addToCart(item)" (toggleWishlist)="confirmRemove(item)"></app-product-card>
+          </div>
+        }
+      </div>
+    }
+    @if (!loading && wishlistItems.length === 0) {
+      <div class="empty-state">
+        <i class="bi bi-heart"></i>
+        <h4>Your wishlist is empty</h4>
+        <p>Save your favorite items and shop them later</p>
+        <a routerLink="/products" class="btn btn-primary">Explore Products</a>
+      </div>
+    }
+  </div>
+  <app-footer></app-footer>
+</div>

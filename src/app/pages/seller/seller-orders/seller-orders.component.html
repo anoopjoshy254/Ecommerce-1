@@ -1,0 +1,74 @@
+<div class="seller-layout">
+  <app-navbar></app-navbar>
+  <nav class="seller-sidebar">
+    <div class="sidebar-brand"><i class="bi bi-shop"></i> Seller Hub</div>
+    <a routerLink="/seller/dashboard" class="nav-link"><i class="bi bi-grid-3x3-gap"></i> Dashboard</a>
+    <a routerLink="/seller/products" class="nav-link"><i class="bi bi-box-seam"></i> Products</a>
+    <a routerLink="/seller/orders" class="nav-link active"><i class="bi bi-receipt"></i> Orders</a>
+    <a routerLink="/seller/coupons" class="nav-link"><i class="bi bi-tag"></i> Coupons</a>
+    <a routerLink="/seller/analytics" class="nav-link"><i class="bi bi-bar-chart-line"></i> Analytics</a>
+  </nav>
+
+  <main class="seller-content">
+    <app-loader></app-loader>
+    <div class="content-padding">
+      <div class="page-header">
+        <h2 class="page-heading">Orders Management</h2>
+      </div>
+
+      <div class="dash-card">
+        <div class="filter-tabs">
+          @for (f of filters; track f) {
+            <button class="filter-tab" [class.active]="activeFilter === f" (click)="setFilter(f)">{{ f }}</button>
+          }
+        </div>
+        
+        <div class="dash-card-header">
+          <div class="search-box">
+            <i class="bi bi-search"></i>
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="searchQuery" (input)="applyFilters()" placeholder="Search by Order ID or Customer..." />
+          </div>
+          <span>{{ filteredOrders.length }} Orders</span>
+        </div>
+        
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Update Status</th>
+              <th class="text-end">Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (order of filteredOrders; track order.id) {
+              <tr>
+                <td class="fw-medium text-dark">#{{ order.id }}</td>
+                <td>{{ order.customer }}</td>
+                <td class="fw-medium">₹{{ order.totalAmount | number:'1.2-2' }}</td>
+                <td><span class="status-badge" [class]="getStatusClass(order.orderStatus)">{{ order.orderStatus }}</span></td>
+                <td>{{ formatDate(order.orderDate) }}</td>
+                <td>
+                  <select class="form-select form-select-sm status-select" [ngModel]="order.orderStatus" (ngModelChange)="updateStatus(order.id, $event)">
+                    @for (s of filters.slice(1); track s) {
+                      <option [value]="s">{{ s }}</option>
+                    }
+                  </select>
+                </td>
+                <td class="text-end">
+                  <a [routerLink]="['/seller/orders', order.id]" class="btn btn-sm btn-outline-primary" title="View Details"><i class="bi bi-eye"></i></a>
+                </td>
+              </tr>
+            }
+            @if (!loading && filteredOrders.length === 0) {
+              <tr><td colspan="7" class="text-center py-4 text-muted">No orders found.</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>

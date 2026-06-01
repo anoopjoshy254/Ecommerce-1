@@ -1,0 +1,69 @@
+    .payment-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f0f2f5;
+      padding: 20px;
+    }
+    .payment-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 40px;
+      width: 100%;
+      max-width: 450px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+    .brand-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .brand-header h3 {
+      font-weight: 700;
+      margin-top: 10px;
+      margin-bottom: 5px;
+      color: #1a1a1a;
+    }
+    .amount-display {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 12px;
+    }
+    .amount-display .currency {
+      font-size: 24px;
+      font-weight: 600;
+      color: #1a1a1a;
+      vertical-align: top;
+      margin-right: 2px;
+    }
+    .amount-display .amount {
+      font-size: 42px;
+      font-weight: 700;
+      color: #1a1a1a;
+      line-height: 1;
+    }
+    .order-info {
+      padding: 0 10px;
+    }
+    .btn-pay {
+      background: #4f46e5;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 14px;
+      margin-top: 10px;
+    }
+    .btn-pay:hover {
+      background: #4338ca;
+      transform: translateY(-1px);
+    }
+    .fade-in {
+      animation: fadeIn 0.4s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }

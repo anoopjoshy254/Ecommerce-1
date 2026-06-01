@@ -1,0 +1,124 @@
+<div class="page-container">
+  <app-navbar></app-navbar>
+  <app-loader></app-loader>
+
+  <!-- Hero Banner Carousel -->
+  <section class="hero-section">
+    <div class="banner-carousel">
+      @for (banner of banners; track $index) {
+        <div class="banner-slide" [class.active]="currentBanner === $index" [style.background]="banner.color">
+          <div class="banner-content">
+            <i class="bi" [class]="banner.icon + ' banner-icon'"></i>
+            <h1 class="banner-title">{{ banner.title }}</h1>
+            <p class="banner-subtitle">{{ banner.subtitle }}</p>
+            <button class="banner-cta" routerLink="/products">{{ banner.cta }}</button>
+          </div>
+          <div class="banner-decoration">
+            <div class="decoration-circle c1"></div>
+            <div class="decoration-circle c2"></div>
+            <div class="decoration-circle c3"></div>
+          </div>
+        </div>
+      }
+      <div class="banner-dots">
+        @for (banner of banners; track $index) {
+          <button class="dot" [class.active]="currentBanner === $index" (click)="currentBanner = $index"></button>
+        }
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- Featured Products -->
+  @if (featuredProducts.length > 0) {
+    <section class="products-section">
+      <div class="page-content">
+        <div class="section-header">
+          <h2 class="section-title">Featured Products</h2>
+          <a routerLink="/products" class="see-all-link">View All <i class="bi bi-arrow-right"></i></a>
+        </div>
+        <div class="products-grid">
+          @for (product of featuredProducts; track product.id) {
+            <app-product-card
+              [product]="product"
+              [isWishlisted]="isWishlisted(product.id)"
+              (addToCart)="onAddToCart($event)"
+              (toggleWishlist)="onToggleWishlist($event)"
+            ></app-product-card>
+          }
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- Promo Banner -->
+  <section class="promo-section">
+    <div class="page-content">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="promo-card promo-blue">
+            <i class="bi bi-truck promo-icon"></i>
+            <div>
+              <h6>Free Delivery</h6>
+              <p>On orders above ₹499</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="promo-card promo-orange">
+            <i class="bi bi-arrow-counterclockwise promo-icon"></i>
+            <div>
+              <h6>Easy Returns</h6>
+              <p>7-day hassle-free returns</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="promo-card promo-green">
+            <i class="bi bi-shield-check promo-icon"></i>
+            <div>
+              <h6>100% Secure</h6>
+              <p>Safe & encrypted payments</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- New Arrivals -->
+  @if (newArrivals.length > 0) {
+    <section class="products-section">
+      <div class="page-content">
+        <div class="section-header">
+          <h2 class="section-title">New Arrivals</h2>
+          <a routerLink="/products" class="see-all-link">View All <i class="bi bi-arrow-right"></i></a>
+        </div>
+        <div class="products-grid">
+          @for (product of newArrivals; track product.id) {
+            <app-product-card
+              [product]="product"
+              [isWishlisted]="isWishlisted(product.id)"
+              (addToCart)="onAddToCart($event)"
+              (toggleWishlist)="onToggleWishlist($event)"
+            ></app-product-card>
+          }
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- Empty State -->
+  @if (!loading && products.length === 0) {
+    <div class="page-content">
+      <div class="empty-state">
+        <i class="bi bi-bag-x"></i>
+        <h4>No Products Available</h4>
+        <p>Check back later for amazing deals!</p>
+      </div>
+    </div>
+  }
+
+  <app-footer></app-footer>
+</div>

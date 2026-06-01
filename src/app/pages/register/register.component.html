@@ -1,0 +1,96 @@
+<div class="auth-page">
+  <app-loader></app-loader>
+  <div class="auth-container">
+    <div class="auth-left">
+      <div class="auth-left-content">
+        <h1 class="brand-name">Shop<span>Mart</span></h1>
+        <p class="brand-slogan">Join millions of happy shoppers. Get the best deals delivered to your doorstep.</p>
+        <div class="feature-list">
+          <div class="feature-item"><i class="bi bi-check-circle-fill"></i> Free delivery on first order</div>
+          <div class="feature-item"><i class="bi bi-check-circle-fill"></i> Exclusive member offers</div>
+          <div class="feature-item"><i class="bi bi-check-circle-fill"></i> Easy returns & refunds</div>
+          <div class="feature-item"><i class="bi bi-check-circle-fill"></i> 24/7 customer support</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-right">
+      <div class="auth-form-wrapper">
+        <h2 class="form-heading">Create Account</h2>
+        <p class="form-subtext">Sign up to get started today!</p>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+          <!-- Name -->
+          <div class="form-group mb-3">
+            <label for="reg-name" class="form-label">Full Name</label>
+            <div class="input-wrapper">
+              <i class="bi bi-person input-icon"></i>
+              <input id="reg-name" type="text" class="form-control custom-input" formControlName="name" placeholder="Enter your full name" [class.is-invalid]="nameCtrl.invalid && nameCtrl.touched" />
+            </div>
+            @if (nameCtrl.invalid && nameCtrl.touched) {
+              <div class="invalid-feedback d-block">Name must be at least 2 characters.</div>
+            }
+          </div>
+
+          <!-- Email -->
+          <div class="form-group mb-3">
+            <label for="reg-email" class="form-label">Email Address</label>
+            <div class="input-wrapper">
+              <i class="bi bi-envelope input-icon"></i>
+              <input id="reg-email" type="email" class="form-control custom-input" formControlName="email" placeholder="Enter your email" [class.is-invalid]="emailCtrl.invalid && emailCtrl.touched" />
+            </div>
+            @if (emailCtrl.invalid && emailCtrl.touched) {
+              <div class="invalid-feedback d-block">
+                @if (emailCtrl.errors?.['required']) { Email is required. }
+                @if (emailCtrl.errors?.['email']) { Please enter a valid email. }
+              </div>
+            }
+          </div>
+
+          <!-- Phone -->
+          <div class="form-group mb-3">
+            <label for="reg-phone" class="form-label">Phone Number</label>
+            <div class="input-wrapper">
+              <i class="bi bi-telephone input-icon"></i>
+              <input id="reg-phone" type="tel" class="form-control custom-input" formControlName="phone" placeholder="10-digit mobile number" [class.is-invalid]="phoneCtrl.invalid && phoneCtrl.touched" />
+            </div>
+            @if (phoneCtrl.invalid && phoneCtrl.touched) {
+              <div class="invalid-feedback d-block">Enter a valid 10-digit phone number.</div>
+            }
+          </div>
+
+          <!-- Password -->
+          <div class="form-group mb-4">
+            <label for="reg-password" class="form-label">Password</label>
+            <div class="input-wrapper">
+              <i class="bi bi-lock input-icon"></i>
+              <input id="reg-password" [type]="showPassword ? 'text' : 'password'" class="form-control custom-input" formControlName="password" placeholder="Create a strong password" [class.is-invalid]="passwordCtrl.invalid && passwordCtrl.touched" />
+              <button type="button" class="toggle-password" (click)="showPassword = !showPassword">
+                <i class="bi" [class.bi-eye]="!showPassword" [class.bi-eye-slash]="showPassword"></i>
+              </button>
+            </div>
+            @if (passwordCtrl.value) {
+              <div class="password-strength">
+                <div class="strength-bar">
+                  <div class="strength-fill" [class]="getPasswordStrength().class" [style.width]="getPasswordStrength().width"></div>
+                </div>
+                <span class="strength-label" [class]="getPasswordStrength().class">{{ getPasswordStrength().label }}</span>
+              </div>
+            }
+            @if (passwordCtrl.invalid && passwordCtrl.touched) {
+              <div class="invalid-feedback d-block">Password must be at least 5 characters.</div>
+            }
+          </div>
+
+          <button id="register-submit-btn" type="submit" class="btn-submit" [disabled]="loading">
+            @if (loading) { <span class="spinner-border spinner-border-sm me-2"></span> }
+            {{ loading ? 'Creating Account...' : 'Create Account' }}
+          </button>
+        </form>
+
+        <div class="auth-divider"><span>Already have an account?</span></div>
+        <a routerLink="/login" class="btn-secondary-auth">Login</a>
+      </div>
+    </div>
+  </div>
+</div>

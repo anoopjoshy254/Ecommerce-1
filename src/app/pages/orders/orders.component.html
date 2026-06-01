@@ -1,0 +1,58 @@
+<div class="page-container">
+  <app-navbar></app-navbar><app-loader></app-loader>
+  <div class="page-content">
+    <h2 class="page-title">My Orders</h2>
+    <div class="filter-tabs">
+      @for (f of filters; track f) {
+        <button class="filter-tab" [class.active]="activeFilter === f" (click)="activeFilter = f">{{ f }}</button>
+      }
+    </div>
+    @if (!loading && filteredOrders.length > 0) {
+      <div class="orders-list">
+        @for (order of filteredOrders; track order.id) {
+          <div class="order-card">
+            <div class="order-header">
+              <div>
+                <span class="order-id">Order</span>
+                <span class="order-date">{{ formatDate(order.orderDate) }}</span>
+              </div>
+              <span class="status-badge" [class]="getStatusClass(order.orderStatus)">{{ order.orderStatus }}</span>
+            </div>
+            <div class="order-body">
+              <div class="order-info mb-3">
+                <div class="info-item"><span class="info-label">Total</span><span class="info-value">₹{{ order.totalAmount | number:'1.2-2' }}</span></div>
+                <div class="info-item"><span class="info-label">Payment</span><span class="info-value">{{ order.paymentMethod }}</span></div>
+                <div class="info-item"><span class="info-label">Status</span><span class="info-value" [class.text-success]="order.paymentStatus === 'Paid'">{{ order.paymentStatus }}</span></div>
+              </div>
+              <div class="order-items-preview d-flex align-items-center mb-3">
+                <div class="me-3" style="width: 50px; height: 50px; border-radius: 8px; overflow: hidden; border: 1px solid #f0f0f0; background: #fff;">
+                  <img [src]="getImageUrl(order.firstItemImageUrl)" [alt]="order.firstItemName" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <div>
+                  <h6 class="mb-0 text-dark" style="font-size: 14px;">{{ order.firstItemName }}</h6>
+                  @if (order.totalItems && order.totalItems > 1) {
+                    <small class="text-muted">+ {{ order.totalItems - 1 }} more item(s)</small>
+                  }
+                </div>
+              </div>
+              <div class="order-actions">
+                <a [routerLink]="['/orders', order.id]" class="btn btn-outline-primary btn-sm">View Details</a>
+                <a [routerLink]="['/track-order', order.id]" class="btn btn-outline-secondary btn-sm"><i class="bi bi-geo-alt"></i> Track</a>
+                <button class="btn btn-sm btn-outline-secondary" (click)="downloadInvoice(order.id)"><i class="bi bi-download"></i> Invoice</button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+    @if (!loading && filteredOrders.length === 0) {
+      <div class="empty-state">
+        <i class="bi bi-box-seam"></i>
+        <h4>No orders found</h4>
+        <p>{{ activeFilter === 'All' ? 'You haven\'t placed any orders yet' : 'No ' + activeFilter + ' orders' }}</p>
+        <a routerLink="/products" class="btn btn-primary">Start Shopping</a>
+      </div>
+    }
+  </div>
+  <app-footer></app-footer>
+</div>

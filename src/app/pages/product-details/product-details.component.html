@@ -1,0 +1,133 @@
+<div class="page-container">
+  <app-navbar></app-navbar>
+  <app-loader></app-loader>
+  <div class="page-content" *ngIf="product">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb-nav mb-3">
+      <a routerLink="/home">Home</a> <i class="bi bi-chevron-right"></i>
+      <a routerLink="/products">Products</a> <i class="bi bi-chevron-right"></i>
+      <span>{{ product.name }}</span>
+    </nav>
+
+    <!-- Product Details -->
+    <div class="product-detail-card">
+      <div class="row g-0">
+        <!-- Image Panel -->
+        <div class="col-md-4 image-panel">
+          <div class="product-main-image">
+            <img [src]="getImageUrl()" [alt]="product.name" />
+          </div>
+          <div class="image-actions">
+            <button class="action-btn wishlist-action" [class.wishlisted]="isWishlisted()" (click)="toggleWishlist()">
+              <i class="bi" [class.bi-heart-fill]="isWishlisted()" [class.bi-heart]="!isWishlisted()"></i>
+              {{ isWishlisted() ? 'Wishlisted' : 'Wishlist' }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Details Panel -->
+        <div class="col-md-5 details-panel">
+          <h1 class="product-title">{{ product.name }}</h1>
+
+          <div class="rating-row" *ngIf="ratingData.totalReviews > 0">
+            <span class="rating-badge">{{ ratingData.averageRating.toFixed(1) }} <i class="bi bi-star-fill"></i></span>
+            <span class="review-count">{{ ratingData.totalReviews }} ratings</span>
+          </div>
+
+          <div class="price-block">
+            <span class="price-big">₹{{ product.price | number:'1.0-0' }}</span>
+            <span class="price-original-big">₹{{ getOriginalPrice() | number:'1.0-0' }}</span>
+            <span class="price-discount-big">{{ getDiscountPercent() }}% off</span>
+          </div>
+
+          <div class="stock-info" [class.out-stock]="product.stockQuantity === 0">
+            <i class="bi" [class.bi-check-circle-fill]="product.stockQuantity > 0" [class.bi-x-circle-fill]="product.stockQuantity === 0"></i>
+            {{ product.stockQuantity > 0 ? 'In Stock (' + product.stockQuantity + ' available)' : 'Out of Stock' }}
+          </div>
+
+          <div class="quantity-section" *ngIf="product.stockQuantity > 0">
+            <span class="qty-label">Quantity:</span>
+            <div class="qty-control">
+                  <button class="qty-btn" (click)="quantity > 1 ? quantity = quantity - 1 : null" [disabled]="quantity <= 1"><i class="bi bi-dash"></i></button>
+                  <div class="qty-value">{{ quantity }}</div>
+                  <button class="qty-btn" (click)="quantity < product.stockQuantity ? quantity = quantity + 1 : null"><i class="bi bi-plus"></i></button>
+            </div>
+          </div>
+
+          <div class="highlights">
+            <div class="highlight-item"><i class="bi bi-truck"></i> Free delivery on orders above ₹499</div>
+            <div class="highlight-item"><i class="bi bi-arrow-counterclockwise"></i> 7-day return policy</div>
+            <div class="highlight-item"><i class="bi bi-shield-check"></i> Secure payment</div>
+          </div>
+        </div>
+
+        <!-- Action Panel -->
+        <div class="col-md-3 action-panel">
+          <div class="action-card">
+            <button class="btn-add-cart" (click)="addToCart()" [disabled]="product.stockQuantity === 0">
+              <i class="bi bi-cart-plus"></i> Add to Cart
+            </button>
+            <button class="btn-buy-now" (click)="buyNow()" [disabled]="product.stockQuantity === 0">
+              <i class="bi bi-lightning-charge"></i> Buy Now
+            </button>
+            <div class="delivery-info">
+              <p class="delivery-label"><i class="bi bi-geo-alt"></i> Delivery to India</p>
+              <p class="delivery-date">Expected by <strong>{{ getDeliveryDate() }}</strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs: Description & Reviews -->
+      <div class="product-tabs">
+        <div class="tab-header">
+          <button class="tab-btn" [class.active]="activeTab === 'description'" (click)="activeTab = 'description'">Description</button>
+          <button class="tab-btn" [class.active]="activeTab === 'reviews'" (click)="activeTab = 'reviews'">
+            Reviews ({{ ratingData.totalReviews }})
+          </button>
+        </div>
+
+        @if (activeTab === 'description') {
+          <div class="tab-content-inner">
+            <p class="description-text">{{ product.description }}</p>
+          </div>
+        }
+
+        @if (activeTab === 'reviews') {
+          <div class="tab-content-inner">
+            <!-- Review Form -->
+            @if (authSvc.isLoggedIn()) {
+              <div class="review-form-section">
+                <h6 class="review-form-title">Write a Review</h6>
+                <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+                  <div class="mb-2">
+                    <app-star-rating [rating]="selectedRating" [readonly]="false" size="lg" (ratingChange)="onRatingChange($event)"></app-star-rating>
+                  </div>
+                  <textarea formControlName="comment" class="form-control mb-2" rows="3" placeholder="Share your experience..."></textarea>
+                  <button type="submit" class="btn btn-primary btn-sm" [disabled]="reviewLoading">
+                    {{ reviewLoading ? 'Submitting...' : 'Submit Review' }}
+                  </button>
+                </form>
+              </div>
+            }
+
+            <!-- Reviews List -->
+            @if (reviews.length > 0) {
+              <div class="reviews-list">
+                @for (review of reviews; track review.reviewId) {
+                  <app-review-card [review]="review"></app-review-card>
+                }
+              </div>
+            } @else {
+              <div class="empty-state" style="padding: 30px">
+                <i class="bi bi-chat-left-text" style="font-size: 40px"></i>
+                <p>No reviews yet. Be the first to review!</p>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+  <app-footer></app-footer>
+</div>

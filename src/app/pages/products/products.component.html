@@ -1,0 +1,59 @@
+<div class="page-container">
+  <app-navbar></app-navbar>
+  <app-loader></app-loader>
+  <div class="products-page">
+
+
+    <!-- Main Content -->
+    <main class="products-main">
+      <!-- Toolbar -->
+      <div class="products-toolbar">
+        <div class="search-row">
+          <div class="search-input-wrapper">
+            <i class="bi bi-search"></i>
+            <input type="text" class="form-control search-box" [(ngModel)]="searchKeyword" (input)="onSearch()" placeholder="Search products..." />
+          </div>
+          <span class="result-count">{{ filteredProducts.length }} products found</span>
+        </div>
+        <div class="toolbar-right">
+          <select class="form-select form-select-sm sort-select" [(ngModel)]="sortBy" (change)="applyFilters()">
+            <option value="default">Sort: Relevance</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="name-asc">Name: A to Z</option>
+            <option value="newest">Newest First</option>
+          </select>
+          <div class="view-toggle">
+            <button [class.active]="viewMode === 'grid'" (click)="viewMode = 'grid'" title="Grid view"><i class="bi bi-grid-3x3-gap"></i></button>
+            <button [class.active]="viewMode === 'list'" (click)="viewMode = 'list'" title="List view"><i class="bi bi-list-ul"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Products Grid -->
+      @if (!loading && filteredProducts.length > 0) {
+        <div [class]="viewMode === 'grid' ? 'products-grid' : 'products-list'">
+          @for (product of filteredProducts; track product.id) {
+            <app-product-card
+              [product]="product"
+              [isWishlisted]="isWishlisted(product.id)"
+              (addToCart)="onAddToCart($event)"
+              (toggleWishlist)="onToggleWishlist($event)"
+            ></app-product-card>
+          }
+        </div>
+      }
+
+      <!-- Empty State -->
+      @if (!loading && filteredProducts.length === 0) {
+        <div class="empty-state">
+          <i class="bi bi-search"></i>
+          <h4>No products found</h4>
+          <p>Try adjusting your search or filters</p>
+          <button class="btn btn-primary" (click)="resetFilters(); searchKeyword = ''">Clear Filters</button>
+        </div>
+      }
+    </main>
+  </div>
+  <app-footer></app-footer>
+</div>

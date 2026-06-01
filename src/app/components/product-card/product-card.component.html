@@ -1,0 +1,55 @@
+<div class="product-card" [routerLink]="['/products', product.id]">
+  <!-- Wishlist Button -->
+  <button
+    class="wishlist-btn"
+    [class.wishlisted]="isWishlisted"
+    (click)="onToggleWishlist($event)"
+    [title]="isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'"
+  >
+    <i class="bi" [class.bi-heart-fill]="isWishlisted" [class.bi-heart]="!isWishlisted"></i>
+  </button>
+
+  <!-- Product Image -->
+  <div class="product-image-wrapper">
+    <img [src]="getImageUrl()" [alt]="product.name" class="product-image" loading="lazy" />
+    @if (!isInStock()) {
+      <div class="out-of-stock-overlay">Out of Stock</div>
+    }
+  </div>
+
+  <!-- Product Info -->
+  <div class="product-info">
+    <h6 class="product-name">{{ product.name }}</h6>
+
+    @if (rating > 0) {
+      <div class="product-rating">
+        <span class="rating-badge">
+          {{ rating.toFixed(1) }} <i class="bi bi-star-fill"></i>
+        </span>
+        <span class="review-count">({{ totalReviews }})</span>
+      </div>
+    }
+
+    <div class="product-pricing">
+      <span class="price-main">₹{{ product.price | number:'1.0-0' }}</span>
+      <span class="price-original">₹{{ originalPrice | number:'1.0-0' }}</span>
+      <span class="price-discount">{{ discountPercent }}% off</span>
+    </div>
+
+    @if (product.stockQuantity > 0 && product.stockQuantity <= 5) {
+      <div class="stock-warning">
+        <i class="bi bi-exclamation-circle-fill"></i>
+        Only {{ product.stockQuantity }} left!
+      </div>
+    }
+
+    <button
+      class="add-to-cart-btn"
+      [disabled]="!isInStock()"
+      (click)="onAddToCart($event)"
+    >
+      <i class="bi bi-cart-plus"></i>
+      {{ isInStock() ? 'Add to Cart' : 'Out of Stock' }}
+    </button>
+  </div>
+</div>

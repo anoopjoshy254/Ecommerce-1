@@ -1,0 +1,25 @@
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;">
+  @for (toast of notify.toasts(); track toast.id) {
+    <div class="toast align-items-center text-white border-0 show fade-in mb-2"
+         [ngClass]="{
+           'bg-success': toast.type === 'success',
+           'bg-danger': toast.type === 'error',
+           'bg-warning text-dark': toast.type === 'warning',
+           'bg-info text-dark': toast.type === 'info'
+         }"
+         role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body d-flex align-items-center gap-2">
+          @if (toast.type === 'success') { <i class="bi bi-check-circle-fill"></i> }
+          @if (toast.type === 'error') { <i class="bi bi-exclamation-triangle-fill"></i> }
+          @if (toast.type === 'warning') { <i class="bi bi-exclamation-circle-fill"></i> }
+          @if (toast.type === 'info') { <i class="bi bi-info-circle-fill"></i> }
+          {{ toast.message }}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" aria-label="Close"
+                [class.btn-close-dark]="toast.type === 'warning' || toast.type === 'info'"
+                (click)="notify.dismiss(toast.id)"></button>
+      </div>
+    </div>
+  }
+</div>

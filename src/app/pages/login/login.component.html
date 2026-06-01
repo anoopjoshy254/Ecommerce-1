@@ -1,0 +1,83 @@
+<div class="auth-page">
+  <app-loader></app-loader>
+  <div class="auth-container">
+    <!-- Left Panel -->
+    <div class="auth-left">
+      <div class="auth-left-content">
+        <h1 class="brand-name">Shop<span>Mart</span></h1>
+        <p class="brand-slogan">Get access to your Orders, Wishlist and Recommendations</p>
+        <div class="auth-illustration">
+          <i class="bi bi-shop-window"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="auth-right">
+      <div class="auth-form-wrapper">
+        <h2 class="form-heading">Login</h2>
+        <p class="form-subtext">Welcome back! Please enter your details.</p>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+          <!-- Email -->
+          <div class="form-group mb-3">
+            <label for="login-email" class="form-label">Email Address</label>
+            <div class="input-wrapper">
+              <i class="bi bi-envelope input-icon"></i>
+              <input
+                id="login-email"
+                type="email"
+                class="form-control custom-input"
+                formControlName="email"
+                placeholder="Enter your email"
+                [class.is-invalid]="emailCtrl.invalid && emailCtrl.touched"
+              />
+            </div>
+            @if (emailCtrl.invalid && emailCtrl.touched) {
+              <div class="invalid-feedback d-block">
+                @if (emailCtrl.errors?.['required']) { Email is required. }
+                @if (emailCtrl.errors?.['email']) { Please enter a valid email. }
+              </div>
+            }
+          </div>
+
+          <!-- Password -->
+          <div class="form-group mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+              <label for="login-password" class="form-label">Password</label>
+              <a href="#" class="forgot-link">Forgot Password?</a>
+            </div>
+            <div class="input-wrapper">
+              <i class="bi bi-lock input-icon"></i>
+              <input
+                id="login-password"
+                [type]="showPassword ? 'text' : 'password'"
+                class="form-control custom-input"
+                formControlName="password"
+                placeholder="Enter your password"
+                [class.is-invalid]="passwordCtrl.invalid && passwordCtrl.touched"
+              />
+              <button type="button" class="toggle-password" (click)="showPassword = !showPassword">
+                <i class="bi" [class.bi-eye]="!showPassword" [class.bi-eye-slash]="showPassword"></i>
+              </button>
+            </div>
+            @if (passwordCtrl.invalid && passwordCtrl.touched) {
+              <div class="invalid-feedback d-block">
+                @if (passwordCtrl.errors?.['required']) { Password is required. }
+                @if (passwordCtrl.errors?.['minlength']) { Minimum 5 characters. }
+              </div>
+            }
+          </div>
+
+          <button id="login-submit-btn" type="submit" class="btn-submit" [disabled]="loading">
+            @if (loading) { <span class="spinner-border spinner-border-sm me-2"></span> }
+            {{ loading ? 'Logging in...' : 'Login' }}
+          </button>
+        </form>
+
+        <div class="auth-divider"><span>New to ShopMart?</span></div>
+        <a routerLink="/register" class="btn-secondary-auth">Create Account</a>
+      </div>
+    </div>
+  </div>
+</div>

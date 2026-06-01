@@ -1,0 +1,27 @@
+@if (isVisible) {
+  <div class="dialog-backdrop" (click)="onCancel()">
+    <div class="dialog-box" (click)="$event.stopPropagation()">
+      <div class="dialog-icon" [class]="'icon-' + type">
+        @if (type === 'danger') { <i class="bi bi-exclamation-triangle-fill"></i> }
+        @if (type === 'warning') { <i class="bi bi-question-circle-fill"></i> }
+        @if (type === 'primary') { <i class="bi bi-info-circle-fill"></i> }
+      </div>
+      <h5 class="dialog-title">{{ title }}</h5>
+      <p class="dialog-message">{{ message }}</p>
+      <div class="dialog-actions">
+        <button class="btn btn-outline-secondary btn-sm" (click)="onCancel()">
+          {{ cancelLabel }}
+        </button>
+        <button
+          class="btn btn-sm"
+          [class.btn-danger]="type === 'danger'"
+          [class.btn-warning]="type === 'warning'"
+          [class.btn-primary]="type === 'primary'"
+          (click)="onConfirm()"
+        >
+          {{ confirmLabel }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

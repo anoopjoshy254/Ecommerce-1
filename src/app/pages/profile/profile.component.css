@@ -1,0 +1,15 @@
+.profile-card { max-width: 600px; background: #fff; border-radius: 12px; box-shadow: var(--shadow-md); overflow: hidden; margin: 0 auto; }
+.profile-header { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); padding: 32px 24px; display: flex; align-items: center; gap: 20px; }
+.avatar { width: 72px; height: 72px; border-radius: 50%; background: rgba(255,255,255,0.25); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 700; border: 3px solid rgba(255,255,255,0.4); flex-shrink: 0; }
+.profile-name { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.profile-email { color: rgba(255,255,255,0.8); font-size: 14px; margin-bottom: 8px; }
+.role-chip { background: rgba(255,255,255,0.2); color: #fff; font-size: 11px; padding: 3px 12px; border-radius: 12px; font-weight: 500; }
+.role-chip.seller { background: rgba(251,100,27,0.4); }
+.profile-links { padding: 8px 0; }
+.profile-link { display: flex; align-items: center; gap: 16px; padding: 16px 24px; text-decoration: none; color: #333; border-bottom: 1px solid #f5f5f5; transition: background 0.2s; }
+.profile-link:hover { background: #f8f9ff; }
+.profile-link > i:first-child { font-size: 20px; color: var(--primary); width: 24px; }
+.profile-link div { flex: 1; }
+.profile-link strong { display: block; font-size: 14px; }
+.profile-link span { font-size: 12px; color: #888; }
+.profile-link > i:last-child { color: #aaa; }

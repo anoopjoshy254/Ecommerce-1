@@ -1,0 +1,76 @@
+<div class="seller-layout">
+  <app-navbar></app-navbar>
+  <nav class="seller-sidebar">
+    <div class="sidebar-brand"><i class="bi bi-shop"></i> Seller Hub</div>
+    <a routerLink="/seller/dashboard" class="nav-link"><i class="bi bi-grid-3x3-gap"></i> Dashboard</a>
+    <a routerLink="/seller/products" class="nav-link"><i class="bi bi-box-seam"></i> Products</a>
+    <a routerLink="/seller/orders" class="nav-link"><i class="bi bi-receipt"></i> Orders</a>
+    <a routerLink="/seller/coupons" class="nav-link"><i class="bi bi-tag"></i> Coupons</a>
+    <a routerLink="/seller/analytics" class="nav-link active"><i class="bi bi-bar-chart-line"></i> Analytics</a>
+  </nav>
+
+  <main class="seller-content">
+    <app-loader></app-loader>
+    <div class="content-padding">
+      <div class="page-header">
+        <h2 class="page-heading">Sales Analytics</h2>
+      </div>
+
+      <div class="row g-4 mb-4">
+        <div class="col-12">
+          <div class="dash-card p-4">
+            <h5 class="card-title">Revenue Overview (Last 7 Days)</h5>
+            <div class="chart-container">
+              <!-- Custom CSS Bar Chart -->
+              <div class="css-bar-chart">
+                @for (d of salesData; track d.date) {
+                  <div class="bar-wrapper">
+                    <div class="bar-value">₹{{ d.totalSales }}</div>
+                    <div class="bar-bg">
+                      <div class="bar-fill" [style.height]="getBarHeight(d.totalSales)"></div>
+                    </div>
+                    <div class="bar-label">{{ d.date | date:'dd MMM' }}</div>
+                  </div>
+                }
+                @if (salesData.length === 0) {
+                  <div class="w-100 h-100 d-flex align-items-center justify-content-center text-muted">No sales data available</div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-12">
+          <div class="dash-card">
+            <div class="p-4 border-bottom"><h5 class="card-title mb-0">Product Performance</h5></div>
+            <table class="table mb-0">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Units Sold</th>
+                  <th>Revenue Generated</th>
+                  <th>Views</th>
+                  <th>Conversion Rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (p of productPerformance; track p.productId) {
+                  <tr>
+                    <td class="fw-medium">{{ p.productName }}</td>
+                    <td>{{ p.unitsSold }}</td>
+                    <td>₹{{ p.revenueGenerated | number:'1.2-2' }}</td>
+                    <td>{{ p.views }}</td>
+                    <td><span class="badge bg-success bg-opacity-10 text-success">{{ p.conversionRate }}%</span></td>
+                  </tr>
+                }
+                @if (productPerformance.length === 0) { <tr><td colspan="5" class="text-center py-4 text-muted">No data available</td></tr> }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
